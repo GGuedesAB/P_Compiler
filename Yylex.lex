@@ -6,6 +6,7 @@
 RELOP "="|"<"|"<="|">"|">="|"!="|"NOT"
 ADDOP "+"|"-"|or
 MULOP "*"|"/"|div|mod|and
+ASSIGNOP ":="
 program program
 true true
 false false
@@ -42,6 +43,7 @@ char_constant \".*\"
 {RELOP} {printf("RELOP ");}
 {ADDOP} {printf("ADDOP ");}
 {MULOP} {printf("MULOP ");}
+{ASSIGNOP} {printf("ASSIGNOP");}
 {program} {printf("program ");}
 {true} {printf("true ");}
 {false} {printf("false ");}
