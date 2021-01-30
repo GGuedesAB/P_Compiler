@@ -6,6 +6,7 @@
 RELOP "="|"<"|"<="|">"|">="|"!="|"NOT"
 ADDOP "+"|"-"|or
 MULOP "*"|"/"|div|mod|and
+boolean_constant true|false
 
 letter [a-zA-z]
 digit [0-9]
@@ -14,20 +15,21 @@ identifier {letter}({letter}|{digit})*
 unsigned_integer {digit}{digit}*
 sign ("+"|"-")?
 scale_factor E{sign}{unsigned_integer}
-unsigned_real {unsigned_integer}(\.{digit}*)?{scale_factor}
+unsigned_real {unsigned_integer}(\.{digit}*)?({scale_factor})?
 integer_constant {sign}{unsigned_integer}
 real_constant {sign}{unsigned_real}
 char_constant \".*\"
 %%
 
-{RELOP} {printf("rel op: %s", yytext);}
-{ADDOP} {printf("add op: %s", yytext);}
-{MULOP} {printf("mul op: %s", yytext);}
+{RELOP} {printf("rel op: %s, ", yytext);}
+{ADDOP} {printf("add op: %s, ", yytext);}
+{MULOP} {printf("mul op: %s, ", yytext);}
+{boolean_constant} {printf("bool const: %s, ", yytext);}
 
-{identifier} {printf("id: %s", yytext);}
-{integer_constant} {printf("int const: %s", yytext);}
-{real_constant} {printf("real const: %s", yytext);}
-{char_constant} {printf("char const: %s", yytext);}
+{identifier} {printf("id: %s, ", yytext);}
+{integer_constant} {printf("int const: %s, ", yytext);}
+{real_constant} {printf("real const: %s, ", yytext);}
+{char_constant} {printf("char const: %s, ", yytext);}
 
 %%
 
