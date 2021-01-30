@@ -37,7 +37,7 @@ scale_factor E{sign}{unsigned_integer}
 unsigned_real {unsigned_integer}(\.{digit}*)?({scale_factor})?
 integer_constant {sign}{unsigned_integer}
 real_constant {sign}{unsigned_real}
-char_constant \".*\"
+char_constant \'.\'
 %%
 
 {RELOP} {printf("RELOP ");}
