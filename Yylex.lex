@@ -6,7 +6,25 @@
 RELOP "="|"<"|"<="|">"|">="|"!="|"NOT"
 ADDOP "+"|"-"|or
 MULOP "*"|"/"|div|mod|and
-boolean_constant true|false
+program program
+true true
+false false
+integer integer
+boolean boolean
+real real
+char char
+begin begin
+end end
+do do
+while while
+read read
+write write
+until until
+goto goto
+if if
+else else
+then then
+func_identifier sin|log|cos|ord|chr|abs|sqrt|exp|eof|eoln 
 
 letter [a-zA-z]
 digit [0-9]
@@ -21,15 +39,33 @@ real_constant {sign}{unsigned_real}
 char_constant \".*\"
 %%
 
-{RELOP} {printf("rel op: %s, ", yytext);}
-{ADDOP} {printf("add op: %s, ", yytext);}
-{MULOP} {printf("mul op: %s, ", yytext);}
-{boolean_constant} {printf("bool const: %s, ", yytext);}
+{RELOP} {printf("RELOP ");}
+{ADDOP} {printf("ADDOP ");}
+{MULOP} {printf("MULOP ");}
+{program} {printf("program ");}
+{true} {printf("true ");}
+{false} {printf("false ");}
+{integer} {printf("integer ");}
+{boolean} {printf("boolean ");}
+{real} {printf("real ");}
+{char} {printf("char ");}
+{begin} {printf("begin ");}
+{end} {printf("end ");}
+{do} {printf("do ");}
+{while} {printf("while ");}
+{read} {printf("read ");}
+{write} {printf("write ");}
+{until} {printf("until ");}
+{goto} {printf("goto ");}
+{if} {printf("if ");}
+{else} {printf("else ");}
+{then} {printf("then ");}
+{func_identifier} {printf("func_identifier ");}
 
-{identifier} {printf("id: %s, ", yytext);}
-{integer_constant} {printf("int const: %s, ", yytext);}
-{real_constant} {printf("real const: %s, ", yytext);}
-{char_constant} {printf("char const: %s, ", yytext);}
+{identifier} {printf("identifier ");}
+{integer_constant} {printf("integer_constant ");}
+{real_constant} {printf("real_constant ");}
+{char_constant} {printf("char_constant ");}
 
 %%
 
