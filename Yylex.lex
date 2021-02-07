@@ -1,77 +1,90 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
+#include <string>
+#include "y.tab.h"
 %}
 
-RELOP "="|"<"|"<="|">"|">="|"!="|"NOT"
-ADDOP "+"|"-"|or
+delim [ \t\n]
+stoken {delim}+
+RELOP "="|"<"|"<="|">"|">="|"!="
+ADDOP "+"|or
+MINUSOP "-"
 MULOP "*"|"/"|div|mod|and
 ASSIGNOP ":="
-program program
-true true
-false false
-integer integer
-boolean boolean
-real real
-char char
-begin begin
-end end
-do do
-while while
-read read
-write write
-until until
-goto goto
-if if
-else else
-then then
-func_identifier sin|log|cos|ord|chr|abs|sqrt|exp|eof|eoln 
+PROGRAM program
+TRUE true
+FALSE false
+INTEGER integer
+BOOLEAN boolean
+REAL real
+CHAR char
+BEGIN begin
+END end
+DO do
+WHILE while
+READ read
+WRITE write
+UNTIL until
+GOTO goto
+IF if
+ELSE else
+THEN then
+FUNC_ID sin|log|cos|ord|chr|abs|sqrt|exp|eof|eoln 
+NOT NOT
 
 letter [a-zA-z]
 digit [0-9]
-identifier {letter}({letter}|{digit})*
+IDENTIFIER {letter}({letter}|{digit})*
 
 unsigned_integer {digit}{digit}*
 sign ("+"|"-")?
 scale_factor E{sign}{unsigned_integer}
 unsigned_real {unsigned_integer}(\.{digit}*)?({scale_factor})?
-integer_constant {sign}{unsigned_integer}
-real_constant {sign}{unsigned_real}
-char_constant \'.\'
+INTEGER_CONSTANT {sign}{unsigned_integer}
+REAL_CONSTANT {sign}{unsigned_real}
+CHAR_CONSTANT \'.\'
 %%
 
-{RELOP} {printf("RELOP ");}
-{ADDOP} {printf("ADDOP ");}
-{MULOP} {printf("MULOP ");}
-{ASSIGNOP} {printf("ASSIGNOP");}
-{program} {printf("program ");}
-{true} {printf("true ");}
-{false} {printf("false ");}
-{integer} {printf("integer ");}
-{boolean} {printf("boolean ");}
-{real} {printf("real ");}
-{char} {printf("char ");}
-{begin} {printf("begin ");}
-{end} {printf("end ");}
-{do} {printf("do ");}
-{while} {printf("while ");}
-{read} {printf("read ");}
-{write} {printf("write ");}
-{until} {printf("until ");}
-{goto} {printf("goto ");}
-{if} {printf("if ");}
-{else} {printf("else ");}
-{then} {printf("then ");}
-{func_identifier} {printf("func_identifier ");}
+{RELOP} { yylval.string_t = strdup(yytext); return RELOP;}
+{ADDOP} { yylval.string_t = strdup(yytext); return ADDOP;}
+{MINUSOP} { return MINUSOP;}
+{MULOP} { yylval.string_t	= strdup(yytext); return MULOP;}
+{ASSIGNOP} { return ASSIGNOP;}
+{PROGRAM} {return PROGRAM;}
+{TRUE} { return T_TRUE;}
+{FALSE} { return T_FALSE;}
+{INTEGER} { return INTEGER;}
+{BOOLEAN} { return BOOLEAN;}
+{REAL} { return REAL;}
+{CHAR} { return CHAR;}
+{BEGIN} { return BEGIN;}
+{END} { return END;}
+{DO} { return DO}
+{WHILE} { return WHILE;}
+{READ} { return READ;}
+{WRITE} { return WRITE;}
+{UNTIL} { return UNTIL;}
+{GOTO} { return GOTO;}
+{IF} { return IF;}
+{ELSE} { return ELSE;}
+{THEN} { return THEN;}
+{FUNC_ID} { yylval.string_t	= strdup(yytext); return FUNC_ID;}
+{NOT} { return NOT;}
 
-{identifier} {printf("identifier ");}
-{integer_constant} {printf("integer_constant ");}
-{real_constant} {printf("real_constant ");}
-{char_constant} {printf("char_constant ");}
+":" { return T_2P; }
+";" { return T_PVIRG; }
+"," { return T_VIRG; }
+"(" { return T_POPEN; }
+")" { return T_PCLOSE; }
+
+{IDENTIFIER} { yylval.string_t = strdup(yytext); return IDENTIFIER;}
+{INTEGER_CONSTANT} { yylval.string_t = strdup(yytext); return INTEGER_CONSTANT;}
+{REAL_CONSTANT} { yylval.string_t	= strdup(yytext); return REAL_CONSTANT;}
+{CHAR_CONSTANT} { yylval.string_t	= strdup(yytext); return CHAR_CONSTANT;}
+
+{stoken} { ;}
 
 %%
 
-int main(int argc, char* argv[]) {
-  yylex() ;
-  return EXIT_SUCCESS ;
+int yywrap(void){
+    return 1;    
 }
