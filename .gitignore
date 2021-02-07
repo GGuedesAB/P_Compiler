@@ -1,2 +1,5 @@
 lex.yy.c
 plex
+y.tab.c
+y.tab.h
+pyacc

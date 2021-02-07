@@ -17,14 +17,14 @@ INTEGER integer
 BOOLEAN boolean
 REAL real
 CHAR char
-BEGIN begin
+T_BEGIN begin
 END end
 DO do
 WHILE while
 READ read
 WRITE write
 UNTIL until
-GOTO goto
+T_GOTO goto
 IF if
 ELSE else
 THEN then
@@ -44,31 +44,31 @@ REAL_CONSTANT {sign}{unsigned_real}
 CHAR_CONSTANT \'.\'
 %%
 
-{RELOP} { yylval.string_t = strdup(yytext); return RELOP;}
-{ADDOP} { yylval.string_t = strdup(yytext); return ADDOP;}
-{MINUSOP} { return MINUSOP;}
-{MULOP} { yylval.string_t	= strdup(yytext); return MULOP;}
-{ASSIGNOP} { return ASSIGNOP;}
-{PROGRAM} {return PROGRAM;}
-{TRUE} { return T_TRUE;}
-{FALSE} { return T_FALSE;}
-{INTEGER} { return INTEGER;}
-{BOOLEAN} { return BOOLEAN;}
-{REAL} { return REAL;}
-{CHAR} { return CHAR;}
-{BEGIN} { return BEGIN;}
-{END} { return END;}
-{DO} { return DO}
-{WHILE} { return WHILE;}
-{READ} { return READ;}
-{WRITE} { return WRITE;}
-{UNTIL} { return UNTIL;}
-{GOTO} { return GOTO;}
-{IF} { return IF;}
-{ELSE} { return ELSE;}
-{THEN} { return THEN;}
-{FUNC_ID} { yylval.string_t	= strdup(yytext); return FUNC_ID;}
-{NOT} { return NOT;}
+{RELOP} { yylval.string_t = strdup(yytext); return RELOP; }
+{ADDOP} { yylval.string_t = strdup(yytext); return ADDOP; }
+{MINUSOP} { return MINUSOP; }
+{MULOP} { yylval.string_t = strdup(yytext); return MULOP; }
+{ASSIGNOP} { return ASSIGNOP; }
+{PROGRAM} {return PROGRAM; }
+{TRUE} { return T_TRUE; }
+{FALSE} { return T_FALSE; }
+{INTEGER} { return INTEGER; }
+{BOOLEAN} { return BOOLEAN; }
+{REAL} { return REAL; }
+{CHAR} { return CHAR; }
+{T_BEGIN} { return T_BEGIN; }
+{END} { return END; }
+{DO} { return DO; }
+{WHILE} { return WHILE; }
+{READ} { return READ; }
+{WRITE} { return WRITE; }
+{UNTIL} { return UNTIL; }
+{T_GOTO} { return T_GOTO; }
+{IF} { return IF; }
+{ELSE} { return ELSE; }
+{THEN} { return THEN; }
+{FUNC_ID} { yylval.string_t	= strdup(yytext); return FUNC_ID; }
+{NOT} { return NOT; }
 
 ":" { return T_2P; }
 ";" { return T_PVIRG; }
@@ -76,12 +76,12 @@ CHAR_CONSTANT \'.\'
 "(" { return T_POPEN; }
 ")" { return T_PCLOSE; }
 
-{IDENTIFIER} { yylval.string_t = strdup(yytext); return IDENTIFIER;}
-{INTEGER_CONSTANT} { yylval.string_t = strdup(yytext); return INTEGER_CONSTANT;}
-{REAL_CONSTANT} { yylval.string_t	= strdup(yytext); return REAL_CONSTANT;}
-{CHAR_CONSTANT} { yylval.string_t	= strdup(yytext); return CHAR_CONSTANT;}
+{IDENTIFIER} { yylval.string_t = strdup(yytext); return IDENTIFIER; }
+{INTEGER_CONSTANT} { yylval.string_t = strdup(yytext); return INTEGER_CONSTANT; }
+{REAL_CONSTANT} { yylval.string_t	= strdup(yytext); return REAL_CONSTANT; }
+{CHAR_CONSTANT} { yylval.string_t	= strdup(yytext); return CHAR_CONSTANT; }
 
-{stoken} { ;}
+{stoken} { ; }
 
 %%
 

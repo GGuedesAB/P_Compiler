@@ -1,16 +1,12 @@
 %{
-  using namespace std;
-
-  void yyerror(char *s);
-  int yylex();
-%}
-
-%code requires {
   #include <iostream>
   #include <unordered_map>
   #include <vector>
   #include <string>
-}
+  extern int yylex();
+  extern int yyparse();
+  inline void yyerror(const char *s) { std::cout << "Error: " << s << std::endl; }
+%}
 
 %union{
   char* string_t;
@@ -23,7 +19,7 @@
 %token  REAL
 %token  BOOLEAN
 %token  CHAR
-%token  BEGIN
+%token  T_BEGIN
 %token  END
 %token  IF
 %token  THEN
@@ -33,6 +29,7 @@
 %token  UNTIL
 %token  READ
 %token  WRITE
+%token T_GOTO
 %token  T_TRUE
 %token  T_FALSE
 %token  MINUSOP
@@ -79,19 +76,20 @@ type:        INTEGER
               | CHAR
               ;
 
-compound_stmt: BEGIN stmt_list END
+compound_stmt: T_BEGIN stmt_list END
                ;
 
-stmt_list:    stmt_list stmt
+stmt_list:    stmt_list T_PVIRG stmt
               | stmt
               ;
 
-stmt:         assign_stmt T_PVIRG
+stmt:         assign_stmt
               | if_stmt
-              | loop_stmt T_PVIRG
-              | read_stmt T_PVIRG
-              | write_stmt T_PVIRG
-              | compound_stmt T_PVIRG
+              | loop_stmt
+              | read_stmt
+              | write_stmt
+              | compound_stmt
+              | goto_stmt
               ;
 
 assign_stmt:  IDENTIFIER ASSIGNOP expr
@@ -118,6 +116,9 @@ read_stmt:    READ T_POPEN ident_list T_PCLOSE
               ;
 
 write_stmt:   WRITE T_POPEN expr_list T_PCLOSE
+              ;
+
+goto_stmt:     T_GOTO IDENTIFIER
               ;
 
 expr_list:    expr
@@ -164,10 +165,5 @@ boolean_constant: T_TRUE
 %%
 
 int main(){
-  int i;
-  return yyparse();
-}
-
-void yyerror(char *s){
-  printf("\nERROR - %s",s);
+  yyparse();
 }
