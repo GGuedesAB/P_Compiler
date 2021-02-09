@@ -11,3 +11,8 @@ all:
 
 clean:
 	rm -f lex.yy.c plex
+
+yacc: 
+	yacc -d yacc.y
+	$(LEX) Yylex.lex
+	g++ lex.yy.c y.tab.c -o pyacc
