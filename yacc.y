@@ -61,7 +61,7 @@
 program:      PROGRAM IDENTIFIER T_PVIRG decl_list compound_stmt
               ;
 
-decl_list:    decl_list decl
+decl_list:    decl_list T_PVIRG decl
               | decl
               ;
 
