@@ -61,17 +61,25 @@
 program:      PROGRAM IDENTIFIER T_PVIRG decl_list compound_stmt
               ;
 
-decl_list:    decl_list T_PVIRG decl
+decl_list:    decl_list decl
               | decl
               ;
 
 decl:         ident_list T_2P type T_PVIRG
-              | functional_type IDENTIFIER T_POPEN ident_list T_PCLOSE T_2P type decl_list compound_stmt T_PVIRG
+              | functional_type IDENTIFIER T_POPEN arg_list T_PCLOSE T_2P type decl_list compound_stmt T_PVIRG
               | functional_type IDENTIFIER T_POPEN T_PCLOSE T_2P type decl_list compound_stmt T_PVIRG
               ;
 
 ident_list:   ident_list T_VIRG IDENTIFIER 
               | IDENTIFIER                 
+              ;
+
+arg_list:     arg_list T_VIRG arg
+              | arg
+              ;
+
+arg:          IDENTIFIER T_2P type
+              | IDENTIFIER
               ;
 
 type:        INTEGER     
