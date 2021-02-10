@@ -90,21 +90,32 @@ stmt_list:    stmt_list T_PVIRG stmt
               | stmt
               ;
 
-stmt:         assign_stmt
-              | if_stmt
-              | loop_stmt
-              | read_stmt
-              | write_stmt
-              | compound_stmt
-              | goto_stmt
-              ;
+stmt: IDENTIFIER T_2P unlabeled_stmt
+      | unlabeled_stmt
+      ;
+
+unlabeled_stmt: open_unlabeled_stmt
+                | closed_unlabeled_stmt
+                ;
+
+non_if_stmt:    assign_stmt
+                | loop_stmt
+                | read_stmt
+                | write_stmt
+                | compound_stmt
+                | goto_stmt
+                ;
 
 assign_stmt:  IDENTIFIER ASSIGNOP expr
               ;
 
-if_stmt:      IF cond THEN stmt                            
-              | ELSE stmt
-              ;
+open_unlabeled_stmt: IF cond THEN unlabeled_stmt
+                     | IF cond THEN closed_unlabeled_stmt ELSE open_unlabeled_stmt
+                     ;
+
+closed_unlabeled_stmt: non_if_stmt
+                 | IF cond THEN closed_unlabeled_stmt ELSE closed_unlabeled_stmt
+                 ;
 
 cond:         expr
               ;
