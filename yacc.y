@@ -20,6 +20,7 @@
 %token  REAL
 %token  BOOLEAN
 %token  CHAR
+%token  FUNCTIONAL
 %token  T_BEGIN
 %token  END
 %token  IF
@@ -30,7 +31,7 @@
 %token  UNTIL
 %token  READ
 %token  WRITE
-%token T_GOTO
+%token  T_GOTO
 %token  T_TRUE
 %token  T_FALSE
 %token  MINUSOP
@@ -65,6 +66,8 @@ decl_list:    decl_list decl
               ;
 
 decl:         ident_list T_2P type T_PVIRG
+              | functional_type IDENTIFIER T_POPEN ident_list T_PCLOSE T_2P type decl_list compound_stmt T_PVIRG
+              | functional_type IDENTIFIER T_POPEN T_PCLOSE T_2P type decl_list compound_stmt T_PVIRG
               ;
 
 ident_list:   ident_list T_VIRG IDENTIFIER 
@@ -76,6 +79,9 @@ type:        INTEGER
               | BOOLEAN
               | CHAR
               ;
+
+functional_type:  FUNCTIONAL
+                  ;
 
 compound_stmt: T_BEGIN stmt_list END
                ;
@@ -152,6 +158,8 @@ factor:       IDENTIFIER
               ;
 
 function_ref: FUNC_ID T_POPEN expr_list T_PCLOSE
+              | IDENTIFIER T_POPEN expr_list T_PCLOSE
+              | IDENTIFIER T_POPEN T_PCLOSE
               ;
 
 constant:     INTEGER_CONSTANT

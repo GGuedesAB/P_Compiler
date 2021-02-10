@@ -17,6 +17,7 @@ INTEGER integer
 BOOLEAN boolean
 REAL real
 CHAR char
+FUNCTIONAL function
 T_BEGIN begin
 END end
 DO do
@@ -56,6 +57,7 @@ CHAR_CONSTANT \'.\'
 {BOOLEAN} { return BOOLEAN; }
 {REAL} { return REAL; }
 {CHAR} { return CHAR; }
+{FUNCTIONAL} {return FUNCTIONAL; }
 {T_BEGIN} { return T_BEGIN; }
 {END} { return END; }
 {DO} { return DO; }
