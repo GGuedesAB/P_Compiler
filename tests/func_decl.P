@@ -1,0 +1,20 @@
+program simple_if_test;
+id1,id2,id3: integer; 
+
+function incr (a) : integer
+b : integer;
+begin
+    b := a + 1;
+    incr := b
+end;
+
+begin
+    id1 := 0;
+    id3 := incr(id1);
+    id2 := 100;
+    while id3 < id2 do
+        id3:=incr(id3);
+        id1:= id3 div id2
+    end;
+    id2 := id1
+end

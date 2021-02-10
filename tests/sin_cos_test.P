@@ -1,0 +1,7 @@
+program sin_cos_test;
+a, b, c: integer;
+begin
+    b := sin(a);
+    c := cos(a);
+    a := 3
+end

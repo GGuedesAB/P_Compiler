@@ -1,0 +1,7 @@
+program simple_if_test;
+id1,id2,id3: integer; 
+id4,id5: boolean; 
+begin
+    if(id1>id2) then 
+        id3 := id1 
+end
