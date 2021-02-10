@@ -6,6 +6,7 @@
   extern int yylex();
   extern int yyparse();
   inline void yyerror(const char *s) { std::cout << "Error: " << s << std::endl; }
+  inline void error_msg(const char *msg) { std::cerr << msg << std::endl; exit(1); }
 %}
 
 %union{
@@ -164,6 +165,16 @@ boolean_constant: T_TRUE
                   ;
 %%
 
-int main(){
+int main(int argc, char* argv[]){
+  if (argc < 2) {
+    error_msg("Please enter the source file.");
+  } else if (argc > 2) {
+    error_msg("Please enter only one source file.");
+  }
+  FILE* source = fopen(argv[1], "r");
+  if (!source) {
+    error_msg("Could not open source file.");
+  }
+  stdin = source;
   yyparse();
 }
