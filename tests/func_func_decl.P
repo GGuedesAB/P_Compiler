@@ -1,0 +1,44 @@
+program func_func_decl;
+id1,id2,id3: integer; 
+
+function incr (a) : integer
+    b : integer;
+begin
+    b := a + 1;
+    incr := b
+end;
+
+
+function pow2 (a:integer) : integer
+    function multiply (x:integer, y:integer) : integer
+        res : integer;
+    begin
+        res := x * y;
+        multiply := res
+    end;
+    function int_to_char (i:integer) : char
+        res : char;
+    begin
+        res := i - 128
+    end;
+begin
+    pow2 := multiply (a, a)
+end;
+
+
+begin
+    id1 := 0;
+    id2 := 8;
+    id3 := incr(id1);
+    id1 := pow2(id2);
+    if id1 > id2 then
+        id2 := 0
+    else if id1 < id2 then
+        id1 := 0
+    else
+        id3 := 100;
+
+    if id3 > id1 then
+        if id2 > id1 then
+            id1 := 100
+end

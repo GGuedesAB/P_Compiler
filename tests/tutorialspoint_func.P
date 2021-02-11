@@ -1,0 +1,19 @@
+program exFunction;
+   a, b, ret : integer;
+
+function max(num1, num2: integer): integer
+   result: integer;
+begin
+   if num1 > num2 then
+      result := num1
+   else
+      result := num2;
+   max := result
+end;
+
+begin
+   a := 100;
+   b := 200;
+   ret := max(a, b);
+   ret := writeln( 'Ret', ret )
+end

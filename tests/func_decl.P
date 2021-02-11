@@ -1,4 +1,4 @@
-program simple_if_test;
+program func_decl;
 id1,id2,id3: integer; 
 
 function incr (a) : integer
