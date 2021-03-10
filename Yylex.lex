@@ -47,12 +47,12 @@ CHAR_CONSTANT \'.\'
 
 {RELOP} { yylval.string_t = strdup(yytext); return RELOP; }
 {ADDOP} { yylval.string_t = strdup(yytext); return ADDOP; }
-{MINUSOP} { return MINUSOP; }
+{MINUSOP} { yylval.string_t = strdup(yytext); return MINUSOP; }
 {MULOP} { yylval.string_t = strdup(yytext); return MULOP; }
-{ASSIGNOP} { return ASSIGNOP; }
+{ASSIGNOP} { yylval.string_t = strdup(yytext); return ASSIGNOP; }
 {PROGRAM} {return PROGRAM; }
-{TRUE} { return T_TRUE; }
-{FALSE} { return T_FALSE; }
+{TRUE} { yylval.string_t = strdup(yytext);return T_TRUE; }
+{FALSE} { yylval.string_t = strdup(yytext); return T_FALSE; }
 {INTEGER} { return INTEGER; }
 {BOOLEAN} { return BOOLEAN; }
 {REAL} { return REAL; }
@@ -70,7 +70,7 @@ CHAR_CONSTANT \'.\'
 {ELSE} { return ELSE; }
 {THEN} { return THEN; }
 {FUNC_ID} { yylval.string_t	= strdup(yytext); return FUNC_ID; }
-{NOT} { return NOT; }
+{NOT} { yylval.string_t = strdup(yytext); return NOT; }
 
 ":" { return T_2P; }
 ";" { return T_PVIRG; }
