@@ -1,0 +1,11 @@
+program test3;
+id1,id2,id3: integer;
+ir1, ir2, ir3 : real;
+begin
+    id3 := (8 / 3) * (2 + 7) / 5;
+    id2 := id3 * 3 - 9 + 105;
+    id1 := id2 / id3 ;
+    ir1 := 3.1415 + 5.12E2 * 3.7;
+    ir2 := ir1 / 2.73;
+    ir3 := ir1 + ir2 * 2.12
+end

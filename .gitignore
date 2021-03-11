@@ -3,3 +3,4 @@ plex
 y.tab.c
 y.tab.h
 pyacc
+yacc.report

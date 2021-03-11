@@ -1,0 +1,7 @@
+program test1;
+ir1, ir2, ir3 : real;
+begin
+    ir1 := (1 + 38) * (2 - 5) + (5.7 - 3.1);
+    ir2 := ir1 - 1;
+    ir3 := ir2 * ir1
+end

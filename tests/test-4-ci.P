@@ -1,0 +1,13 @@
+program test4;
+id1,id2,id3: boolean;
+ir1, ir2: real;
+i1, i2: integer;
+begin
+    id1 := false;
+    id2 := id1 and true or false;
+    id3 := id1 and false or id2;
+    i1 := 123 * 5 / 2 + 1;
+    ir1 := i1 * 7.3752E-12;
+    i2 := 500125;
+    ir2 := ir1 * 3.14 * i2
+end
