@@ -26,7 +26,6 @@ class tree
 private:
 
 public:
-    int id;
     node* self_root;
     tree* left;
     tree* right;
@@ -34,6 +33,7 @@ public:
     void print();
     ~tree();
 };
+
 const std::string decode_node_type(nodeType n);
 nodeType check_most_proeminent_type(tree* root, std::unordered_map<std::string, symbolInfo> symbolTable);
 std::string make_eval (tree* root, std::unordered_map<std::string, symbolInfo> symbolTable, nodeType type);
