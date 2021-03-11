@@ -372,17 +372,25 @@ void check_type(std::string symbol, std::unordered_map<std::string, symbolInfo> 
         symbolInfo& arg1 = std::get<1>(*it);
         symbolInfo& arg2 = std::get<2>(*it);
         symbolInfo& result = std::get<3>(*it);
-        if (result.value.find("_temp")!= std::string::npos && result.type != UNKNOWN) {
+        if (result.value.find("_temp")!= std::string::npos && result.type != UNKNOWN && result.type != ID) {
             result_temps.insert({result.value, result.type});
         }
-        if (arg1.value.find("_temp")!= std::string::npos) {
+        if (arg1.type > ID && arg1.value.find("_temp")!= std::string::npos) {
             arg1.type = result_temps[arg1.value];
         }
-        if (arg2.value.find("_temp")!= std::string::npos) {
+        if (arg2.type > ID && arg2.value.find("_temp")!= std::string::npos) {
             arg2.type = result_temps[arg2.value];
         }
-        if (result.value.find("_temp")!= std::string::npos && result.type == UNKNOWN) {
-            result.type = (arg1.type > arg2.type) ? arg1.type : arg2.type;
+        if (result.value.find("_temp")!= std::string::npos && (result.type == UNKNOWN || result.type == ID)) {
+            nodeType arg1_type = arg1.type;
+            nodeType arg2_type = arg2.type;
+            if (arg1.type <= ID) {
+                arg1_type = symbol_table[arg1.value].type;
+            }
+            if (arg2.type <= ID) {
+                arg2_type = symbol_table[arg2.value].type;
+            }
+            result.type = (arg1_type > arg2_type) ? arg1_type : arg2_type;
             result_temps.insert({result.value, result.type});
         } else if (symbol == result.value) {
             result.type = symbol_table[symbol].type;
