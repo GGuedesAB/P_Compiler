@@ -273,7 +273,7 @@ void gen_tuple(char* id, tree* expr_node, int depth, std::deque<std::tuple<std::
         exit(1);
     }
     if (expr_node->left == NULL && expr_node->right == NULL) {
-        if (depth == 0) {
+        if (depth == 1) {
             symbolInfo node_info (ASSING, std::string(id));
             symbolInfo left_node(expr_node->self_root->nt, expr_node->self_root->nodeContent);
             symbolInfo empty_node;
@@ -287,8 +287,8 @@ void gen_tuple(char* id, tree* expr_node, int depth, std::deque<std::tuple<std::
     }
     if (expr_node->left->self_root->nt > EXPR && expr_node->right->self_root->nt > EXPR) {
         std::string node_id;
-        if (depth > 0) {
-             node_id = "temp" + std::to_string((2*depth+1));
+        if (depth > 1) {
+             node_id = "_temp" + std::to_string(depth);
         } else {
             node_id = std::string(id);
         }
@@ -308,31 +308,31 @@ void gen_tuple(char* id, tree* expr_node, int depth, std::deque<std::tuple<std::
     // Left and right are expressions
     if (expr_node->left->self_root->nt <= EXPR && expr_node->right->self_root->nt <= EXPR) {
         // If only left and right are expressions, then this node will add a quad to stack: (OP, LEFT_TEMP, RIGHT_TEMP, CURRENT_TEMP)
-        symbolInfo left_node(UNKNOWN, "temp" + std::to_string((2*(depth+1)+1)));
-        symbolInfo right_node(UNKNOWN, "temp" + std::to_string((2*(depth+2)+1)));
-        symbolInfo result_node(UNKNOWN, (depth == 0) ? std::string(id) : std::to_string(depth));
+        symbolInfo left_node(UNKNOWN, "_temp" + std::to_string(2*depth));
+        symbolInfo right_node(UNKNOWN, "_temp" + std::to_string(2*depth+1));
+        symbolInfo result_node(UNKNOWN, (depth == 1) ? std::string(id) : "_temp" + std::to_string(depth));
         std::tuple<std::string, symbolInfo, symbolInfo, symbolInfo> node_quad (expr_node->self_root->nodeContent, left_node, right_node, result_node);
         quad_stack.push_back(node_quad);
-        gen_tuple(id, expr_node->left, depth+1, quad_stack);
-        gen_tuple(id, expr_node->right, depth+2, quad_stack);
+        gen_tuple(id, expr_node->left, 2*depth, quad_stack);
+        gen_tuple(id, expr_node->right, 2*depth+1, quad_stack);
     // Only left is expression
     } else if (expr_node->left->self_root->nt <= EXPR) {
         // If only left is expression, then this node will add a quad to stack: (OP, LEFT_TEMP, RIGHT, CURRENT_TEMP)
-        symbolInfo left_node(UNKNOWN, "temp" + std::to_string((2*(depth+1)+1)));
+        symbolInfo left_node(UNKNOWN, "_temp" + std::to_string(2*depth));
         symbolInfo right_node(expr_node->right->self_root->nt, expr_node->right->self_root->nodeContent);
-        symbolInfo result_node(UNKNOWN, (depth == 0) ? std::string(id) : std::to_string(depth));
+        symbolInfo result_node(UNKNOWN, (depth == 1) ? std::string(id) : "_temp" + std::to_string(depth));
         std::tuple<std::string, symbolInfo, symbolInfo, symbolInfo> node_quad (expr_node->self_root->nodeContent, left_node, right_node, result_node);
         quad_stack.push_back(node_quad);
-        gen_tuple(id, expr_node->left, depth+1, quad_stack);
+        gen_tuple(id, expr_node->left, 2*depth, quad_stack);
     // Only right is expression
     } else {
         // If only right is expression, then this node will add a quad to stack: (OP, LEFT, RIGHT_TEMP, CURRENT_TEMP)
         symbolInfo left_node(expr_node->left->self_root->nt, expr_node->left->self_root->nodeContent);
-        symbolInfo right_node(UNKNOWN, "temp" + std::to_string((2*(depth+2)+1)));
-        symbolInfo result_node(UNKNOWN, (depth == 0) ? std::string(id) : std::to_string(depth));
+        symbolInfo right_node(UNKNOWN, "_temp" + std::to_string(2*depth+1));
+        symbolInfo result_node(UNKNOWN, (depth == 1) ? std::string(id) : "_temp" + std::to_string(depth));
         std::tuple<std::string, symbolInfo, symbolInfo, symbolInfo> node_quad (expr_node->self_root->nodeContent, left_node, right_node, result_node);
         quad_stack.push_back(node_quad);
-        gen_tuple(id, expr_node->right, depth+1, quad_stack);
+        gen_tuple(id, expr_node->right, 2*depth+1, quad_stack);
     }
 }
 
@@ -351,7 +351,7 @@ std::deque<std::tuple<std::string, symbolInfo, symbolInfo, symbolInfo>> gen_quad
         (*, temp1, 27, id1)
     */
    std::deque<std::tuple<std::string, symbolInfo, symbolInfo, symbolInfo>> quads;
-   gen_tuple(id, expr_root, 0, quads);
+   gen_tuple(id, expr_root, 1, quads);
    return quads;
 }
 
@@ -361,10 +361,31 @@ void check_type(std::string symbol, std::unordered_map<std::string, symbolInfo> 
         std::cout << "ERROR: Invalid assignment to " << symbol << "!" << std::endl;
         std::cout << symbol << " is " << symbol_table[symbol] << " expression is " << decode_node_type(expr_type) << std::endl;
     }
-    for (auto& s: symbol_expr_quad) {
-        symbolInfo& si = std::get<3>(s);
-        if (symbol == si.value){
-            si.type = symbol_table[symbol].type;
+    std::unordered_map<std::string, nodeType> result_temps;
+    // for (auto it = symbol_expr_quad.rbegin(); it != symbol_expr_quad.rend(); ++it) {
+    //     symbolInfo& result = std::get<3>(*it);
+    //     if (symbol == result.value){
+    //         result.type = symbol_table[symbol].type;
+    //     }
+    // }
+    for (auto it = symbol_expr_quad.rbegin(); it != symbol_expr_quad.rend(); ++it) {
+        symbolInfo& arg1 = std::get<1>(*it);
+        symbolInfo& arg2 = std::get<2>(*it);
+        symbolInfo& result = std::get<3>(*it);
+        if (result.value.find("_temp")!= std::string::npos && result.type != UNKNOWN) {
+            result_temps.insert({result.value, result.type});
+        }
+        if (arg1.value.find("_temp")!= std::string::npos) {
+            arg1.type = result_temps[arg1.value];
+        }
+        if (arg2.value.find("_temp")!= std::string::npos) {
+            arg2.type = result_temps[arg2.value];
+        }
+        if (result.value.find("_temp")!= std::string::npos && result.type == UNKNOWN) {
+            result.type = (arg1.type > arg2.type) ? arg1.type : arg2.type;
+            result_temps.insert({result.value, result.type});
+        } else if (symbol == result.value) {
+            result.type = symbol_table[symbol].type;
         }
     }
 }
