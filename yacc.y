@@ -13,6 +13,7 @@
   inline void error_msg(const char *msg) { std::cerr << msg << std::endl; exit(1); }
   int universal_expr_id = 0;
   std::vector<std::string> id_list;
+  std::deque<std::string> assignment_order;
   std::unordered_map<std::string, symbolInfo> symbol_table;
   tree* root = new tree (UNINITIALIZED, "root");
   tree* current;
@@ -77,10 +78,12 @@
 
 %%
 program:      PROGRAM IDENTIFIER T_PVIRG decl_list compound_stmt {
-                for (auto ids = expr_quad.begin(); ids != expr_quad.end(); ++ids) {
-                  for (auto it = ids->second.rbegin(); it != ids->second.rend(); it++) {
+                for (auto ids = assignment_order.begin(); ids != assignment_order.end(); ++ids) {
+                  auto& i = expr_quad[*ids];
+                  for (auto it = i.rbegin(); it != i.rend(); it++) {
                     std::cout << "(" << std::get<0>(*it) << ", " << std::get<1>(*it) << ", " << std::get<2>(*it) << ", " << std::get<3>(*it) << ")" << std::endl;
                   }
+                  std::cout << std::endl;
                 }
               }
               ;
@@ -152,6 +155,7 @@ assign_stmt:  IDENTIFIER ASSIGNOP expr {
                 std::string id ($1);
                 int expr_id = $3;
                 expr_quad.insert({id, gen_quad($1, expr_list[expr_id])});
+                assignment_order.push_back(id);
                 check_type(id, symbol_table, expr_list[expr_id], expr_quad[id]);
                 eval_tree(id, expr_list[expr_id], symbol_table);
               }
