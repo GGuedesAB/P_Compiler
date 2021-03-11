@@ -1,0 +1,7 @@
+program test2;
+b1, b2, b3 : boolean;
+begin
+    b1 := false or true;
+    b2 := false;
+    b3 := b1 or b2
+end
