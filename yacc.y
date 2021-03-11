@@ -85,6 +85,11 @@ program:      PROGRAM IDENTIFIER T_PVIRG decl_list compound_stmt {
                   }
                   std::cout << std::endl;
                 }
+                for (auto& id : symbol_table) {
+                  symbolInfo value = id.second;
+                  std::string id_name = id.first;
+                  std::cout << id_name <<  " (" << decode_node_type(value.type) << ") = " << value.value << std::endl;
+                }
               }
               ;
 
